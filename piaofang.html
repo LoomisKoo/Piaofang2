@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html data-reactroot="">
+
+<head>
+    <title>全球票房影史榜</title>
+    <meta name="csrf" content="59a37f41dde1a5928c823afe85d6cb73e6cd237b" />
+    <meta name="deviceId" content="194ffe7f0e7c8-0ba4afa1e2d0d28-3c62654b-201b88-194ffe7f0e718" />
+    <link rel="dns-prefetch" href="//ms0.meituan.net" />
+    <link rel="dns-prefetch" href="//obj.pipi.cn" />
+    <link rel="dns-prefetch" href="//s0.meituan.net" />
+    <link rel="dns-prefetch" href="//p0.meituan.net" />
+    <link rel="dns-prefetch" href="//p1.meituan.net" />
+    <meta name="lx:category" content="moviepro" />
+    <meta name="lx:appnm" content="moviepro_i" />
+    <meta name="lx:cid" content="c_moviepro_nhaeqsle" />
+    <link rel="dns-prefetch" href="//lx1.meituan.net" />
+    <link rel="dns-prefetch" href="//lx2.meituan.net" />
+    <link rel="dns-prefetch" href="//plx.meituan.com" />
+    <meta charSet="utf-8" />
+    <meta name="keywords" content="猫眼票房分析,猫眼电影,电影票房,实时票房,日票房,预售票房,影片票房趋势,受众画像,实时排片,预售排片,上座率,历史票房" />
+    <meta name="description" content="猫眼票房分析，提供准确的每日电影实时票房、排片、上座率查询，为电影从业者提供及时、专业的数据分析服务" />
+    <meta http-equiv="cleartype" content="yes" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-store" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="renderer" content="webkit" />
+    <link rel="icon" type="image/x-icon" href="//obj.pipi.cn/festatic/piaofang/moviepro/favicon.ico" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#F1303D" />
+  
+    <link rel="stylesheet" href="https://s0.pipi.cn/festatic/moviepro/css/movieCinemaBoxofficeGlobalBoxGlobalHistoryRankIndex_e8892e70.css" />
+    <script>window._KNB_IGNORE_WECHAT = true;</script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+
+        .movie-rank-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .movie-rank-header {
+            background-image: url('https://s0.pipi.cn/festatic/moviepro/image/2025_0213_v1_rankheader_38f810d5.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
+        .global-title-icon {
+            display: block;
+            margin: 0 auto 5px;
+        }
+
+        .title-lineone-ranktitle {
+            margin: 0;
+            margin-bottom: 5px;
+            color: #FBEBCD;
+            font-size: 54px;
+        }
+
+        .global-title-tip {
+            margin: 0;
+            color: #9E927D;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f9;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-box-office {
+            color: #e50914;
+            font-weight: bold;
+        }
+
+        /* 修改背景色为更深的颜色 */
+        .nezha-row {
+            background-color: #eeeeee;
+            height: 80px; /* 设置固定高度 */
+            line-height: 60px; /* 行高等于高度 */
+        }
+
+        .increment-display {
+            opacity: 0;
+            transition: opacity 1s;
+            color: red;
+            font-weight: bold;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="movie-rank-container">
+            <div class="movie-rank-header">
+                <div class="global-title">
+                    <div class="global-title-icon"></div>
+                    <div class="title-lineone-ranktitle">全球影史票房榜</div>
+                    <span class="global-title-tip" id="current-time"></span>
+                </div>
+            </div>
+            <div class="movie-list">
+                <div class="list">
+                    <div class="list-title">影片排名</div>
+                    <div class="want-header header-fixed" style="top:0px">
+                        <div class="header-rank">排名</div>
+                        <div class="header-year">上映年份</div>
+                        <div class="header-money">总票房(单位:元)</div>
+                    </div>
+                    <div class="list-content" id="movie-list">
+                        <!-- 数据将通过 JavaScript 填充 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 实时更新时间函数
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeStr = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-time').innerHTML = `更新时间：${timeStr}`;
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        const movieList = document.getElementById('movie-list');
+        let lastNezhaBoxOffice = 0;
+        const baseIncrement = 10; // 基础增加 10 亿
+        const maxBoxOffice = 200; // 票房上限 200 亿
+
+        // 处理电影数据，修改哪吒闹海票房并排序
+        function processMovies(data) {
+            return data.data.list.map(movie => {
+                let boxOffice = parseFloat(movie.rawValue);
+                if (isNaN(boxOffice)) {
+                    boxOffice = 0;
+                }
+                // 将票房转换为亿为单位
+                boxOffice = boxOffice / 100000000;
+
+                if (movie.movieName === '哪吒之魔童闹海') {
+                    let newBoxOffice;
+                    if (lastNezhaBoxOffice === 0) {
+                        newBoxOffice = boxOffice + baseIncrement; // 首次增加 10 亿
+                    } else {
+                        newBoxOffice = boxOffice + baseIncrement; // 不使用随机值
+                    }
+                    if (newBoxOffice > maxBoxOffice) {
+                        newBoxOffice = maxBoxOffice;
+                    }
+                    let increment = newBoxOffice - lastNezhaBoxOffice;
+                    let incrementDisplay;
+                    if (increment < 1) {
+                        incrementDisplay = Math.round(increment * 100000000); // 转换为元并取整
+                    } else {
+                        incrementDisplay = Math.round(increment * 10000); // 转换为万并取整
+                    }
+                    if (isNaN(incrementDisplay)) {
+                        console.error('增加量计算结果为 NaN，可能存在数据问题');
+                        incrementDisplay = 0;
+                    }
+                    lastNezhaBoxOffice = newBoxOffice;
+                    boxOffice = newBoxOffice;
+                    console.log('哪吒之魔童闹海新票房:', newBoxOffice, '增加量:', incrementDisplay);
+                    return {
+                        ...movie,
+                        box: boxOffice,
+                        increment: incrementDisplay
+                    };
+                }
+                return {
+                    ...movie,
+                    box: boxOffice
+                };
+            }).sort((a, b) => b.box - a.box);
+        }
+
+        // 创建表格行
+        function createTableRow(movie, index) {
+            const movieItem = document.createElement('div');
+            movieItem.classList.add('movie-item');
+
+            const movieInfo = document.createElement('div');
+            movieInfo.classList.add('movie-info');
+
+            const movieRank = document.createElement('div');
+            movieRank.classList.add('movie-rank');
+
+            const itemSort = document.createElement('div');
+            itemSort.classList.add('item-sort', `sort-${index + 1}`);
+            itemSort.textContent = index + 1;
+            movieRank.appendChild(itemSort);
+
+            const movieName = document.createElement('div');
+            movieName.classList.add('movie-name');
+            movieName.textContent = movie.movieName;
+            if (movie.movieName === '哪吒之魔童闹海') {
+                movieItem.classList.add('nezha-row');
+            }
+            movieRank.appendChild(movieName);
+
+            movieInfo.appendChild(movieRank);
+
+            const movieYear = document.createElement('div');
+            movieYear.classList.add('movie-year');
+            const releaseYear = new Date(movie.releaseTime).getFullYear();
+            movieYear.textContent = releaseYear;
+            movieInfo.appendChild(movieYear);
+
+            const movieMoney = document.createElement('div');
+            movieMoney.classList.add('movie-money');
+
+            const boxText = document.createElement('div');
+            boxText.textContent = movie.box.toFixed(2);
+            const moneyUnit = document.createElement('span');
+            moneyUnit.classList.add('money-unit');
+            moneyUnit.textContent = '亿';
+            boxText.appendChild(moneyUnit);
+            movieMoney.appendChild(boxText);
+            
+
+            if (movie.movieName === '哪吒之魔童闹海') {
+                const numAnim = document.createElement('div');
+                numAnim.classList.add('num-anim');
+                let incrementText;
+                if (movie.increment < 10000) {
+                    incrementText = `+${movie.increment}`;
+                } else {
+                    incrementText = `+${Math.round(movie.increment / 10000)} 万`;
+                }
+                numAnim.textContent = incrementText;
+                movieMoney.appendChild(numAnim);
+
+                // 使用 requestAnimationFrame 实现过渡
+                const showIncrement = () => {
+                    numAnim.style.opacity = 1;
+                    setTimeout(() => {
+                        const hideIncrement = () => {
+                            numAnim.style.opacity = 0;
+                        };
+                        requestAnimationFrame(hideIncrement);
+                    }, 2500);
+                };
+                setTimeout(() => {
+                    requestAnimationFrame(showIncrement);
+                }, 0);
+                
+                const boxText2 = document.createElement('div');
+                boxText2.textContent = movie.indexItems[0].title;
+                const moneyUnit2 = document.createElement('span');
+                moneyUnit2.classList.add('money-unit');
+                let newBoxInfo = parseFloat(movie.indexItems[0].boxInfo) + baseIncrement;
+                moneyUnit2.textContent = newBoxInfo.toFixed(2) + movie.indexItems[0].unitDesc;
+                boxText2.appendChild(moneyUnit2);
+                movieMoney.appendChild(boxText2);
+
+                
+                const boxText3 = document.createElement('div');
+                boxText3.textContent = movie.indexItems[1].title;
+                const moneyUnit3 = document.createElement('span');
+                moneyUnit3.classList.add('money-unit');
+                moneyUnit3.textContent = movie.indexItems[1].boxInfo + movie.indexItems[1].unitDesc;
+                boxText3.appendChild(moneyUnit3);
+                boxText3.style.fontSize = '10px';
+                boxText3.style.color = 'black';
+
+                movieMoney.appendChild(boxText3);
+            }
+
+            movieInfo.appendChild(movieMoney);
+
+            movieItem.appendChild(movieInfo);
+
+            return movieItem;
+        }
+
+        // 更新表格数据
+        function updateTable(movies) {
+            // 清空现有表格内容
+            movieList.innerHTML = '';
+
+            // 遍历排序后的数据并更新表格
+            movies.forEach((movie, index) => {
+                const row = createTableRow(movie, index);
+                movieList.appendChild(row);
+            });
+        }
+
+        // 从接口获取数据并更新表格
+        async function fetchData() {
+            try {
+                const response = await fetch("https://piaofang.maoyan.com/i/api/rank/globalBox/historyRankList?WuKongReady=h5");
+                if (!response.ok) {
+                    throw new Error(`网络响应错误: ${response.status}`);
+                }
+                const data = await response.json();
+                const processedMovies = processMovies(data);
+                updateTable(processedMovies);
+            } catch (error) {
+                console.error("获取数据失败:", error);
+            }
+        }
+
+        // 每 5 秒读取一次接口，可根据实际情况调整时间间隔
+        setInterval(fetchData, 3000);
+
+        // 首次加载时立即调用
+        fetchData();
+    </script>
+</body>
+
+</html>
